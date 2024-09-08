@@ -13,13 +13,30 @@ const SignUp = () => {
   const [pass, setPass] = useState(null);
 
   const [ showPassword, setShowPassword ] = useState(false);
+  const [ valid, setValid ] = useState(false);
   const navigate = useNavigate();
+
+
+  const validPassword = (val) => {
+
+    const passRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if(passRegex.test(val)) {
+      setValid(true)
+      setPass(val)
+    }
+    else {
+      setValid(false)
+      setPass(val)
+    }
+  }
+
 
   const onSubmit = () => {
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const passRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
-    if(emailRegex.test(email) && pass && name) {
+    if(emailRegex.test(email) && passRegex.test(pass) && name) {
       console.log("This", email, pass, name)
 
       const req = async ()=>{
@@ -57,7 +74,7 @@ const SignUp = () => {
               <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} required/>
               <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required/>
                 <div className="pass-input-div">
-                  <input type={showPassword ? "text" : "password"} placeholder="Password" value={pass} onChange={(e) => setPass(e.target.value)} />
+                  <input type={showPassword ? "text" : "password"} placeholder="Password" value={pass} onChange={(e) => validPassword(e.target.value)} style={{ color: valid ? 'green' : 'red' }} />
                   {showPassword ? <FaEyeSlash onClick={() => {setShowPassword(!showPassword)}} /> : <FaEye onClick={() => {setShowPassword(!showPassword)}} />}
               </div>
 
